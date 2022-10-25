@@ -23,6 +23,7 @@ mysql.connectDB(host ='localhost', user = 'root', psw = '', db_name = 'test')
 cursor = db.cursor()
 
 ## creating a table called 'users' in the 'datacamp' database
-cursor.execute("CREATE TABLE stations( stationID VARCHAR(255) PRIMARY KEY, name VARCHAR(255), lineName VARCHAR(255) FOREIGN KEY REFERENCES lines(lineName);)")
+cursor.execute("CREATE TABLE stations( stationID VARCHAR(255) PRIMARY KEY, name VARCHAR(255);)")
 cursor.execute("CREATE TABLE lines (lineName VARCHAR(255) PRIMARY KEY;")
-cursor.execute("CREATE TABLE stationLine(stationLineID VARCHAR(255), stationId FOREIGN KEY REFERENCES stations(stationID), lineName FOREIGN KEY REFERENCES lines(lineName); ")
+cursor.execute("CREATE TABLE stationLine(stationLineID VARCHAR(255) PRIMARY KEY, stationId FOREIGN KEY REFERENCES stations(stationID), lineName FOREIGN KEY REFERENCES lines(lineName); ")
+
