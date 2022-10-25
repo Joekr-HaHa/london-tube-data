@@ -9,21 +9,46 @@ import mysql.connector as mysql
 db = mysql.connect(
     host = "localhost",
     user = "root",
-    passwd = "dbms"
+    passwd = "password1",
+    db="mydb"
 )
 
 with open("train-network.json") as f:
     data=json.load(f)
+#print(data)
 
-df = pd.DataFrame(data)
-
-mysql = MySQLUtil()
+'''mysql = MySQLUtil()
 mysql.connectDB(host ='localhost', user = 'root', psw = '', db_name = 'test')
-
+'''
 cursor = db.cursor()
 
 ## creating a table called 'users' in the 'datacamp' database
-cursor.execute("CREATE TABLE stations( stationID VARCHAR(255) PRIMARY KEY, name VARCHAR(255);)")
-cursor.execute("CREATE TABLE lines (lineName VARCHAR(255) PRIMARY KEY;")
-cursor.execute("CREATE TABLE stationLine(stationLineID VARCHAR(255) PRIMARY KEY, stationId FOREIGN KEY REFERENCES stations(stationID), lineName FOREIGN KEY REFERENCES lines(lineName); ")
+#cursor.execute("CREATE TABLE Stations( stationID VARCHAR(255) PRIMARY KEY, name VARCHAR(255));")
+#cursor.execute("CREATE TABLE trainLines(lineName VARCHAR(255) PRIMARY KEY);")
+#cursor.execute("CREATE TABLE stationLine(stationLineID VARCHAR(255) PRIMARY KEY, stationId VARCHAR(255), lineName VARCHAR(255), FOREIGN KEY(stationID) REFERENCES Stations(stationID), FOREIGN KEY(lineName) REFERENCES trainLines(lineName)); ")
+count=0
+#cursor.execute("INSERT INTO Stations(stationID,name) VALUES('1234','MyStation');")
+cursor.execute("DELETE FROM stationLine")
+cursor.execute("DELETE FROM Stations")
+cursor.execute("DELETE FROM trainLines")
+db.commit()
+for i in data['stations']:
+    print(i['id'])
+    cursor.execute("INSERT INTO Stations(stationID,name) VALUES('"+i['id']+"','"+i['name'].replace("'","")+"');")
+db.commit()
+for j in data['lines']:
+    cursor.execute("INSERT INTO trainLines(lineName) VALUES('"+i['name']+"');")
+    db.commit()
+    for p in j['stations']:
+        '''print(p)
+        print(("SELECT * FROM Stations WHERE stationID='940GZZLUHSC'"))
+        print(cursor.execute("SELECT * FROM Stations WHERE stationID='940GZZLUHSC'"))
+        print(cursor.execute("SELECT * FROM Stations WHERE stationID="+p+");"))'''
+        cursor.execute("INSERT INTO stationLine(stationLineID,stationID,lineName) VALUES('"+str(count)+"','"+p+"','"+j["name"]+"');")
+        count+=1
+        db.commit()
+print(cursor.execute("SELECT * FROM stationLine"))
+input("put station name here")
 
+#cursor.execute("SELECT lineName FROM stationLine WHERE stationID = (SELECT stationID FROM Station WHERE stationName='+input+');")
+#cursor.execute("SELECT name FROM Stations WHERE stationID=(SELECT stationID FROM stationLine WHERE lineName='+input+'"))
