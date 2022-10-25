@@ -1,0 +1,9 @@
+#input name of station, print all lines that pass through
+#input tube line name and print all stations on input
+import pandas  as pd
+import json
+
+with open("train-network.json") as f:
+    data.load(f)
+
+df = pd.DataFrame(data)
